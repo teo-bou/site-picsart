@@ -6,7 +6,7 @@
 - NodeJS
 - PHP
 
-## Setup
+## Setup (be in the site-picsart folder)
 
 1. **Install Dependencies**
     ```sh
