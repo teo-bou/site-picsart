@@ -33,7 +33,8 @@ class ImageController extends Controller
     public function show($id)
     {
         $image = Image::find($id);
-        return response()->json(['path' => $image->link], 200);
+
+        return inertia('ImagePage', ['image' => asset('storage/' . $image->link)]);
     }
 
     public function destroy($id)

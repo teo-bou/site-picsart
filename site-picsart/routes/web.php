@@ -17,6 +17,8 @@ Route::get('/images', function () {
     ]);
 })->name('images.index');
 
+Route::get('/images/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('images.show');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
