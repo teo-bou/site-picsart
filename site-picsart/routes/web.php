@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::post('/upload-image', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
+Route::post('/upload-album', [App\Http\Controllers\AlbumController::class, 'store'])->name('album.upload');
 
 Route::get('/images', function () {
     return Inertia::render('DispImages', [
@@ -18,7 +19,14 @@ Route::get('/images', function () {
 })->name('images.index');
 
 Route::get('/images/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('images.show');
-
+Route::get('/albums/create', function () {
+    return Inertia::render('AlbumCreation');
+})->name('albums.create');
+Route::get('/albums', function () {
+    return Inertia::render('DispAlbums', [
+        'albums' => App\Models\Album::all()
+    ]);
+})->name('albums.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
