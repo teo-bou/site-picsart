@@ -6,13 +6,17 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return Inertia::render('Home');
 });
+
+Route::post('/upload-image', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
+
+Route::get('/images', function () {
+    return Inertia::render('DispImages', [
+        'images' => App\Models\Image::all()
+    ]);
+})->name('images.index');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
