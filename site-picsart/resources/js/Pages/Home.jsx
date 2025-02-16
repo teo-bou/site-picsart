@@ -17,7 +17,7 @@ const Home = () => {
 
         axios.post('/upload-image', formData)
             .then(response => {
-            // alert('Image uploaded successfully');
+            alert('Image uploaded successfully');
             })
             .catch(error => {
             alert('Image upload failed');
