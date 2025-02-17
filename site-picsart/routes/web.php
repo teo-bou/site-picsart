@@ -4,9 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return redirect()->route('albums.index');
 });
 
 Route::post('/upload-image', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
@@ -27,6 +26,16 @@ Route::get('/albums', function () {
         'albums' => App\Models\Album::all()
     ]);
 })->name('albums.index');
+
+Route::get('/albums/{id}', function ($id) {
+    $album = App\Models\Album::find($id);
+    $images = App\Models\Image::where('album_id', $id)->get();
+    return Inertia::render('AlbumPage', [
+        'album' => $album,
+        'images' => $images
+    ]);
+})->name('albums.show');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

@@ -12,7 +12,7 @@ class ImageController extends Controller
     {
         // Validate the request
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
         ]);
 
         // Store the image
@@ -22,6 +22,8 @@ class ImageController extends Controller
             // Create an image object
             $image = new Image();
             $image->link = $path;
+            if($request->album_id)
+                $image->album_id = $request->album_id;
             $image->save();
 
             return response()->json(['path' => $path], 201);

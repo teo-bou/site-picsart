@@ -37,6 +37,7 @@ const AlbumCreation = () => {
                 <button type="submit">Create</button>
             </form>
             {message && <p>{message}</p>}
+            <a href='/albums' className='block mt-4 text-indigo-600 hover:text-indigo-500'>View Albums</a>
         </div>
     );
 };
