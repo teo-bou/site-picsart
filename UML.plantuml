@@ -1,0 +1,36 @@
+@startuml
+
+class Image {
+
+#id
+lien : String
+ISO : Int
+ouverture: Float
+vitesse_obturation: Float
+date: Date
+}
+
+
+class Album {
+
+#id
+nom : String
+photoDeProfilURL : String
+publie: Bool
+dateDeDebut: Date
+dateDePublication: Date
+}
+
+class User {
+#id du CAS
+//nom du CAS
+admin : Bool
+}
+
+class Member{}
+
+
+Image "*"--"1" Album : Appartient
+Album "*" -- "*" User
+(Album, User) .. Member
+@enduml
