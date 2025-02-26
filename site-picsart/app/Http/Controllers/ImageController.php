@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Image;
-
+use ZipArchive;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
@@ -12,24 +13,27 @@ class ImageController extends Controller
     {
         // Validate the request
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg'
         ]);
 
-        // Store the image
-        if ($request->file('image')) {
-            $path = $request->file('image')->store('images', 'public');
+        $paths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('images', 'public');
+                $paths[] = $path;
 
-            // Create an image object
-            $image = new Image();
-            $image->link = $path;
-            if($request->album_id)
-                $image->album_id = $request->album_id;
-            $image->save();
+                // Create an image object
+                $image = new Image();
+                $image->link = $path;
+                if($request->album_id)
+                    $image->album_id = $request->album_id;
+                $image->save();
+            }
 
-            return response()->json(['path' => $path], 201);
+            return response()->json(['paths' => $paths], 201);
         }
 
-        return response()->json(['error' => 'Image not uploaded'], 400);
+        return response()->json(['error' => 'Images not uploaded'], 400);
     }
 
     public function show($id)
@@ -54,5 +58,39 @@ class ImageController extends Controller
     {
         $images = Image::all();
         return response()->json(['images' => $images], 200);
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $imageIds = $request->input('imageIds');
+        Image::whereIn('id', $imageIds)->delete();
+
+        return response()->json(['message' => 'Images deleted successfully'], 200);
+    }
+
+    public function download(Request $request)
+    {
+        $imageIds = explode(',', $request->query('ids'));
+        $images = Image::whereIn('id', $imageIds)->get();
+
+        if ($images->isEmpty()) {
+            return response()->json(['error' => 'No images found'], 404);
+        }
+
+        $zip = new ZipArchive;
+        $zipFileName = 'images.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($images as $image) {
+                $filePath = storage_path('app/public/' . $image->link);
+                $zip->addFile($filePath, basename($filePath));
+            }
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'Failed to create zip file'], 500);
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 }
