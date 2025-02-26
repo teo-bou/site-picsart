@@ -34,9 +34,13 @@ class ImageController extends Controller
 
     public function show($id)
     {
-        $image = Image::find($id);
+        $image = Image::findOrFail($id);
+        $album_id = $image->album_id;
 
-        return inertia('ImagePage', ['image' => asset('storage/' . $image->link)]);
+        return inertia('ImagePage', [
+            'image' => $image,
+            'album_id' => $album_id,
+        ]);
     }
 
     public function destroy($id)
