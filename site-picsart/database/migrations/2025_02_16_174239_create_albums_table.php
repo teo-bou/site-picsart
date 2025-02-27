@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->string('link_cover')->nullable();
+            $table->boolean('published')->default(false);
+            $table->timestamp('published_at')->nullable();
+            $table->timestamp('event_at')->nullable();
+            
         });
     }
 

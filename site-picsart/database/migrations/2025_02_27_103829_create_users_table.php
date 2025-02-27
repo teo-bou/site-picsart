@@ -11,23 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('link');
-            $table->foreignId('album_id');
-            $table->integer('ISO')->nullable();
-            $table->integer('ouverture')->nullable();
-            $table->integer('vitesse_obturation')->nullable();
+            $table->string('name');
+            $table->boolean('is_admin')->default(false);
         });
     }
 
     /**
      * Reverse the migrations.
      */
-
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('users');
     }
 };
