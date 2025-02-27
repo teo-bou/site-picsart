@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Header from '@/Components/Header';
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const AlbumCreation = () => {
     const [name, setName] = useState('');
@@ -22,6 +25,7 @@ const AlbumCreation = () => {
 
     return (
         <div>
+            <Header/>
             <h1>Create Album</h1>
             <form onSubmit={handleSubmit}>
                 <div>

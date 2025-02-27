@@ -4,12 +4,17 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ImageController;
+
 Route::get('/', function () {
     return redirect()->route('albums.index');
 });
 
 Route::post('/upload-image', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
 Route::post('/upload-album', [App\Http\Controllers\AlbumController::class, 'store'])->name('album.upload');
+
+Route::post('/upload-images', [ImageController::class, 'store']);
+Route::post('/delete-images', [ImageController::class, 'deleteMultiple']);
 
 Route::get('/images', function () {
     return Inertia::render('DispImages', [
@@ -18,6 +23,7 @@ Route::get('/images', function () {
 })->name('images.index');
 
 Route::get('/images/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('images.show');
+Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
 Route::get('/albums/create', function () {
     return Inertia::render('AlbumCreation');
 })->name('albums.create');
