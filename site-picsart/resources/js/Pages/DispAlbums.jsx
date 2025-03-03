@@ -5,6 +5,11 @@ import Header from '@/Components/Header';
 const DispAlbums = () => {
     const { albums } = usePage().props;
     console.log(albums);
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
     return (
         <div>
             <Header/>
@@ -15,6 +20,7 @@ const DispAlbums = () => {
                     {albums.map((album) => (
                         <Link key={album.id} href={`/albums/${album.id}`}  style={{ margin: '10px' }}>
                             {album.name}
+                            <div> {formatDate(album.event_at)} </div>
                         </Link>
                     ))}
                 </div>

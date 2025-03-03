@@ -15,11 +15,13 @@ class AlbumController extends Controller
         // Validate the request
         $request->validate([
             'name' => 'required|string',
+            'event_at' => 'required|date'
         ]);
 
         // Create an album
         $album = new Album();
         $album->name = $request->name;
+        $album->event_at = $request->event_at;
         $album->save();
 
         return response()->json(['message' => 'Album created'], 201);

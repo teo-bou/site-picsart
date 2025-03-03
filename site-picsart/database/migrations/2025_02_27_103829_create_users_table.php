@@ -12,10 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
+            $table->uuid('uuid')->unique()->comment('Unique ID of each user');
+            $table->string('firstname', 100)->comment('First name of each user');
+            $table->string('lastname', 100)->comment('Last name of each user');
+            $table->string('email', 200)->unique()->comment('Unique email of each user');
+            $table->boolean('dark_theme')->default(true)->comment('Dark theme preference of each user');
+            $table->string('language', 2)->default('fr')->comment('Language preference of each user');
             $table->timestamps();
-            $table->string('name');
-            $table->boolean('is_admin')->default(false);
+            $table->timestamp('deleted_at')->nullable()->comment('Date when it is a deleted user');
+
         });
     }
 
