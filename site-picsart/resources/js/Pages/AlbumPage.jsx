@@ -55,7 +55,7 @@ const AlbumPage = () => {
                 <div className="flex justify-between items-start">
                     <div>
                         <h1 className="text-4xl sm:text-5xl font-bold">{album.name}</h1>
-                        <h4 className="text-lg sm:text-xl font-bold text-gray-600">16 janv. 2027</h4>
+                        <h4 className="text-lg sm:text-xl font-bold text-gray-600">{new Date(album.event_at).toLocaleDateString('fr-FR')}</h4>
                         <p className="text-gray-500">@Jaimes Léfoto, @Jean Bon</p>
                     </div>
 

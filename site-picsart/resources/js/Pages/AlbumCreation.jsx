@@ -15,7 +15,6 @@ const AlbumCreation = () => {
         // Fetch existing photographers from the server
         axios.get('/users')
             .then(response => {
-                
                 setAllPhotographers(response.data.users.map((user) => ({
                     name: user.firstname + ' ' + user.lastname,
                     id: user.id
@@ -30,12 +29,13 @@ const AlbumCreation = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('photographers', photographers.join(','));
+        formData.append('photographers', JSON.stringify(photographers));
         formData.append('event_at', selectedDate.toISOString().split('T')[0]);
 
         axios.post('/upload-album', formData)
             .then(() => {
                 setMessage('Album created successfully');
+                window.location.href = '/';
             })
             .catch(error => {
                 setMessage('Album creation failed');
@@ -44,10 +44,14 @@ const AlbumCreation = () => {
     };
 
     const handleAddPhotographer = () => {
-        if (photographer.id && !photographers.includes(photographer.id)) {
+        if (photographer.id && !photographers.some(p => p.id === photographer.id)) {
             setPhotographers([...photographers, photographer]);
             setPhotographer({name: '', id: ''});
         }
+    };
+
+    const handleRemovePhotographer = (id) => {
+        setPhotographers(photographers.filter(p => p.id !== id));
     };
 
     return (
@@ -81,10 +85,19 @@ const AlbumCreation = () => {
                     {/* User Mentions */}
                     <div className="text-gray-600 space-y-2">
                         {photographers.map((photog, index) => (
-                            <p key={index} className="font-bold">@ {photog.name}</p>
+                            <div key={index} className="flex items-center">
+                                <p className="font-bold">@ {photog.name}</p>
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemovePhotographer(photog.id)}
+                                    className="ml-2 text-red-500 hover:text-red-700"
+                                >
+                                   X
+                                </button>
+                            </div>
                         ))}
                     </div>
-                    </div>
+                </div>
 
                 <div className="mt-4 flex gap-2">
                     <select
@@ -92,26 +105,26 @@ const AlbumCreation = () => {
                         onChange={(e) => {
                             const selectedPhotographer = {name: e.target.selectedOptions[0].text, id: e.target.value};
                             setPhotographer(selectedPhotographer);
-                            console.log(selectedPhotographer);
                         }}
                         className="w-full border rounded-lg px-4 py-2"
                     >   
                         <option value="">{photographer.name ? photographer.name : 'Sélectionner un photographe'}</option>
-                        {allPhotographers.map((photog, index) => (
-                            <option key={index} value={photog.id}>{photog.name}</option>
-                        ))}
+                        {allPhotographers
+                            .filter(photog => photographers.every(p => p.id != photog.id))
+                            .map((photog, index) => (
+                                <option key={index} value={photog.id}>{photog.name}</option>
+                            ))
+                        }
                     </select>
                     
                     <button
                         type="button"
                         onClick={handleAddPhotographer}
-                        className="border rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-200"
-                    >
+                        className="border rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-200">
                         Ajouter
                     </button>
                 </div>
 
-                {/* Submit Button */}
                 <div className="mt-6 flex justify-center">
                     <button type="submit" className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800">
                         Valider
@@ -122,7 +135,6 @@ const AlbumCreation = () => {
             {/* Success/Error Message */}
             {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
         </div>
-    
     );
 };
 

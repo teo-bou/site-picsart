@@ -51,6 +51,9 @@ Route::get('/albums/{id}', function ($id) {
     ]);
 })->name('albums.show');
 
+
+Route::delete('/albums/{id}', [App\Http\Controllers\AlbumController::class, 'destroy'])->name('albums.destroy');
+
 Route::get('/display', function () {
     return response()->json([
         'details' => Auth::user()
