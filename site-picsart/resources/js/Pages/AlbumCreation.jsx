@@ -5,7 +5,7 @@ import "react-calendar/dist/Calendar.css";
 
 const AlbumCreation = () => {
     const [name, setName] = useState('');
-    const [photographer, setPhotographer] = useState('');
+    const [photographer, setPhotographer] = useState({name: '', id: ''});
     const [photographers, setPhotographers] = useState([]);
     const [message, setMessage] = useState('');
     const [allPhotographers, setAllPhotographers] = useState([]);
@@ -13,9 +13,13 @@ const AlbumCreation = () => {
 
     useEffect(() => {
         // Fetch existing photographers from the server
-        axios.get('/api/photographers')
+        axios.get('/users')
             .then(response => {
-                setAllPhotographers(response.data);
+                
+                setAllPhotographers(response.data.users.map((user) => ({
+                    name: user.firstname + ' ' + user.lastname,
+                    id: user.id
+                })));
             })
             .catch(error => {
                 console.error('Error fetching photographers:', error);
@@ -40,9 +44,9 @@ const AlbumCreation = () => {
     };
 
     const handleAddPhotographer = () => {
-        if (photographer && !photographers.includes(photographer)) {
+        if (photographer.id && !photographers.includes(photographer.id)) {
             setPhotographers([...photographers, photographer]);
-            setPhotographer('');
+            setPhotographer({name: '', id: ''});
         }
     };
 
@@ -77,23 +81,26 @@ const AlbumCreation = () => {
                     {/* User Mentions */}
                     <div className="text-gray-600 space-y-2">
                         {photographers.map((photog, index) => (
-                            <p key={index} className="font-bold">@ {photog}</p>
+                            <p key={index} className="font-bold">@ {photog.name}</p>
                         ))}
                     </div>
-                </div>
-                
+                    </div>
 
-                {/* Add Photographer */}
                 <div className="mt-4 flex gap-2">
                     <select
-                        value={photographer}
-                        onChange={(e) => setPhotographer(e.target.value)}
+                        value={photographer.name}
+                        onChange={(e) => {
+                            const selectedPhotographer = {name: e.target.selectedOptions[0].text, id: e.target.value};
+                            setPhotographer(selectedPhotographer);
+                            console.log(selectedPhotographer);
+                        }}
                         className="w-full border rounded-lg px-4 py-2"
-                    ></select>
-                        <option value="">Sélectionner un photographe</option>
+                    >   
+                        <option value="">{photographer.name ? photographer.name : 'Sélectionner un photographe'}</option>
                         {allPhotographers.map((photog, index) => (
-                            <option key={index} value={photog}>{photog}</option>
+                            <option key={index} value={photog.id}>{photog.name}</option>
                         ))}
+                    </select>
                     
                     <button
                         type="button"

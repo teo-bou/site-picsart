@@ -14,7 +14,7 @@ Route::get('/', function () {
 });
 
 
-
+Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth')->group(function () {

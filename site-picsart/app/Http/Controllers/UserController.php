@@ -39,6 +39,25 @@ class UserController extends Controller
         return $user;
     }
 
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json(['user' => $user], 200);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+        return response()->json(['message' => 'User deleted'], 200);
+    }
+
+    public function index()
+    {
+        $users = User::all();
+        return response()->json(['users' => $users], 200);
+    }
+
 
     
 }
