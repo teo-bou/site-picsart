@@ -23,6 +23,14 @@ const AlbumPage = () => {
         }
     };
 
+    const handleImageClick = (imageId) => {
+        if (isSelectionMode) {
+            handleImageSelect(imageId);
+        } else {
+            window.location.href = `/image/${imageId}`;
+        }
+    };
+
     const handleDeleteSelected = () => {
         axios.post('/delete-images', { imageIds: selectedImages })
             .then(response => {
@@ -96,15 +104,15 @@ const AlbumPage = () => {
                 <div className="grid auto-cols-fr gap-4 mt-6 mb-10"
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(275px, 0.95fr))",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(275px, 1fr))",
                         gap: "16px"
                     }}
                 >
                     {images.map((image) => (
                         <div 
                             key={image.id} 
-                            className={`relative block ${isSelectionMode && 'cursor-pointer'}`} 
-                            onClick={() => isSelectionMode && handleImageSelect(image.id)}
+                            className={`relative block ${isSelectionMode ? 'cursor-pointer' : 'cursor-pointer'}`} 
+                            onClick={() => handleImageClick(image.id)}
                         >
                             <div className="relative w-full" style={{ paddingTop: "63.25%" }}> {/* Ratio 16:9 */}
                                 <img 

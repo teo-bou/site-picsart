@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ImageController;
 
 Route::get('/', function () {
@@ -22,7 +23,7 @@ Route::get('/images', function () {
     ]);
 })->name('images.index');
 
-Route::get('/images/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('images.show');
+Route::get('/image/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('image.show');
 Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
 Route::get('/albums/create', function () {
     return Inertia::render('AlbumCreation');

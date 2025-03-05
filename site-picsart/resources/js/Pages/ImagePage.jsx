@@ -17,6 +17,14 @@ const ImagePage = () => {
                     <Link 
                         href={`/albums/${album_id}#image-${image.id}`} 
                         className="flex items-center text-gray-600 hover:text-gray-900"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const target = document.getElementById(`image-${image.id}`);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            window.history.pushState({}, '', `/albums/${album_id}#image-${image.id}`);
+                        }}
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
