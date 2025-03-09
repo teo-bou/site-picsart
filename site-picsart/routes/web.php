@@ -13,7 +13,8 @@ Route::get('/', function () {
     return redirect()->route('albums.index');
 });
 
-
+Route::post('/upload-images', [ImageController::class, 'store']);
+Route::post('/delete-images', [ImageController::class, 'deleteMultiple']);
 Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users');
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
 

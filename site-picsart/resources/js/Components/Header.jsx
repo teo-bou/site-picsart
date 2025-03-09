@@ -7,9 +7,9 @@ const Header = () => {
       <div className="container mx-auto flex justify-between items-center">
 
         {/* Logo au centre */}
-        <div className="w-1/3 flex justify-center">
+        <a className="w-1/3 flex justify-center" href="/">
             <img src={logo} alt="PicsArt Logo" className="h-12" />
-        </div>
+        </a>
 
         {/* Icône utilisateur à droite */}
         <div className="w-1/3 flex justify-center">
