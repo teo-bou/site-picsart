@@ -114,14 +114,9 @@ const AlbumPage = () => {
                 >
                     {images.map((image) => (
                         <div 
-                            key={image.id} 
-<<<<<<< HEAD
+                            key={image.id}
                             className={`relative block cursor-pointer`} 
                             onClick={handleImageSelect(image.id)}
-=======
-                            className={`relative block ${isSelectionMode ? 'cursor-pointer' : 'cursor-pointer'}`} 
-                            onClick={() => handleImageClick(image.id)}
->>>>>>> adba8067093c8f8639bda6f2bff4565e93616450
                         >
                             <div className="relative w-full" style={{ paddingTop: "63.25%" }}> {/* Ratio 16:9 */}
                                 <img 

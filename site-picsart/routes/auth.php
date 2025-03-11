@@ -1,22 +1,4 @@
 <?php
-<<<<<<< HEAD
-
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-|
-| This file contains routes related to authetification, including login,
-| and logout. These routes to corresponding controller methods that handle
-| the logicfor each action.
-|
-*/
-Route::prefix('/auth')->name('auth.')->group(function () {
-    Route::get('/login', [AuthController::class, 'login'])
-=======
 /*
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;

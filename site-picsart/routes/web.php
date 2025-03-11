@@ -4,15 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-<<<<<<< HEAD
-
-
 use Illuminate\Support\Facades\Auth;
 
-=======
-use Illuminate\Support\Facades\Redirect;
-use App\Http\Controllers\ImageController;
->>>>>>> adba8067093c8f8639bda6f2bff4565e93616450
 
 Route::get('/', function () {
     return redirect()->route('albums.index');
@@ -39,12 +32,7 @@ Route::get('/images', function () {
     ]);
 })->name('images.index');
 
-<<<<<<< HEAD
 Route::get('/images/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('images.show');
-=======
-Route::get('/image/{id}', [App\Http\Controllers\ImageController::class, 'show'])->name('image.show');
-Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
->>>>>>> adba8067093c8f8639bda6f2bff4565e93616450
 Route::get('/albums/create', function () {
     return Inertia::render('AlbumCreation');
 })->name('albums.create');

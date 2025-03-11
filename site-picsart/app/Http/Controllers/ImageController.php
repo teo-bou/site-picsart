@@ -37,7 +37,7 @@ class ImageController extends Controller
         
         // Ajustement de la qualité/compression selon la taille du fichier
         if ($initialSize > 10 * 1024 * 1024) { // Plus de 5 Mo
-            $quality = 50;
+            $quality = 40;
             $compressionLevel = 8;
         } elseif ($initialSize > 3 * 1024 * 1024) { // Entre 2 et 5 Mo
             $quality = 70;
