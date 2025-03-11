@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
     })->name('welcome');
 
 });
-Route::post('/upload-image', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
+
+Route::post('/upload-images', [App\Http\Controllers\ImageController::class, 'store'])->name('image.upload');
 Route::post('/upload-album', [App\Http\Controllers\AlbumController::class, 'store'])->name('album.upload');
 
 Route::get('/images', function () {
@@ -53,6 +54,9 @@ Route::get('/albums/{id}', function ($id) {
 
 
 Route::delete('/albums/{id}', [App\Http\Controllers\AlbumController::class, 'destroy'])->name('albums.destroy');
+
+Route::post('/delete-images', [App\Http\Controllers\ImageController::class, 'deleteMultiple'])->name('images.destroyMultiple');
+Route::get('/download-images', [App\Http\Controllers\ImageController::class, 'download'])->name('images.download');
 
 Route::get('/display', function () {
     return response()->json([

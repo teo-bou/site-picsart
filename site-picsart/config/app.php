@@ -13,6 +13,14 @@ return [
     |
     */
 
+    'aliases' => [
+        'App' => Illuminate\Support\Facades\App::class,
+        'Artisan' => Illuminate\Support\Facades\Artisan::class,
+        // Other aliases...
+
+        'Image' => Intervention\Image\Facades\Image::class,
+    ],
+
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

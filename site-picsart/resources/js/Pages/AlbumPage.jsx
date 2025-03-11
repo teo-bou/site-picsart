@@ -15,11 +15,15 @@ const AlbumPage = () => {
         setSelectedImages([]);
     };
 
-    const handleImageSelect = (imageId) => {
-        if (selectedImages.includes(imageId)) {
-            setSelectedImages(selectedImages.filter(id => id !== imageId));
+    const handleImageSelect = (imageId) => () => {
+        if(isSelectionMode){
+            if (selectedImages.includes(imageId)) {
+                setSelectedImages(selectedImages.filter(id => id !== imageId));
+            } else {
+                setSelectedImages([...selectedImages, imageId]);
+            }
         } else {
-            setSelectedImages([...selectedImages, imageId]);
+            window.location.replace(`/images/${imageId}`);
         }
     };
 
@@ -103,8 +107,8 @@ const AlbumPage = () => {
                     {images.map((image) => (
                         <div 
                             key={image.id} 
-                            className={`relative block ${isSelectionMode && 'cursor-pointer'}`} 
-                            onClick={() => isSelectionMode && handleImageSelect(image.id)}
+                            className={`relative block cursor-pointer`} 
+                            onClick={handleImageSelect(image.id)}
                         >
                             <div className="relative w-full" style={{ paddingTop: "63.25%" }}> {/* Ratio 16:9 */}
                                 <img 
