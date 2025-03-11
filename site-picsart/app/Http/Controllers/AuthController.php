@@ -112,7 +112,7 @@ class AuthController extends Controller
 
             // Store the user in the session
             Auth::login($user);
-            return redirect()->route('display');
+            return redirect()->route('home');
         } catch (IdentityProviderException $e) {
             abort(400, 'Authentication failed: ' . $e->getMessage());
         }
