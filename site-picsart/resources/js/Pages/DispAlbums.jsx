@@ -4,7 +4,7 @@ import Header from '@/Components/Header';
 
 const DispAlbums = () => {
     const { albums } = usePage().props;
-    console.log(albums);
+    
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -24,21 +24,33 @@ const DispAlbums = () => {
     };
 
     return (
-        <div>
-            <Header/>
-            <div>
-                <h1 className="p-3">Album Gallery</h1>
-                <a className='p-3 block mt-4 text-indigo-600 hover:text-indigo-500' href="/albums/create">Create Album</a>
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <div className="bg-gray-100 min-h-screen">
+            <Header />
+            <div className="max-w-7xl mx-auto p-6">
+                <h1 className="text-3xl font-bold text-gray-800">Album Gallery</h1>
+                <Link 
+                    href="/albums/create" 
+                    className="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500"
+                >
+                    Create Album
+                </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                     {albums.map((album) => (
-                        <div key={album.id} style={{ margin: '10px', position: 'relative' }}>
+                        <div key={album.id} className="relative bg-white shadow-lg rounded-lg overflow-hidden">
                             <Link href={`/albums/${album.id}`}>
-                                {album.name}
-                                <div> {formatDate(album.event_at)} </div>
+                                <img 
+                                    src={album.cover || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'} 
+                                    alt="Album Cover" 
+                                    className="w-full h-48 object-cover"
+                                />
+                                <div className="p-4">
+                                    <h2 className="text-lg font-semibold text-gray-700">{album.name}</h2>
+                                    <p className="text-gray-500 text-sm">{formatDate(album.event_at)}</p>
+                                </div>
                             </Link>
                             <button 
                                 onClick={() => handleDelete(album.id)} 
-                                style={{ position: 'absolute', top: '0', right: '0' }}
+                                className="absolute top-2 right-2 bg-red-700 text-white p-1 rounded-full hover:bg-red-600"
                             >
                                 🗑️
                             </button>

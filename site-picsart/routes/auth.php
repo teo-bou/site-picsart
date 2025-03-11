@@ -25,3 +25,4 @@ Route::prefix('/auth')->name('auth.')->group(function () {
             ->name('logout');
     });
 });
+*/

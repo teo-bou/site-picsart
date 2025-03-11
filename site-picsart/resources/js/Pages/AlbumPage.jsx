@@ -100,7 +100,7 @@ const AlbumPage = () => {
                 <div className="grid auto-cols-fr gap-4 mt-6 mb-10"
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(275px, 0.95fr))",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(275px, 1fr))",
                         gap: "16px"
                     }}
                 >
