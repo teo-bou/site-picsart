@@ -27,20 +27,25 @@ const AlbumCreation = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('photographers', JSON.stringify(photographers));
-        formData.append('event_at', selectedDate.toISOString().split('T')[0]);
-
-        axios.post('/upload-album', formData)
-            .then(() => {
-                setMessage('Album created successfully');
-                window.location.href = '/';
-            })
-            .catch(error => {
-                setMessage('Album creation failed');
-                console.error(error);
+    
+        try {
+            const response = await axios.post('/upload-album', {
+                name: name,
+                event_at: selectedDate.toISOString().split('T')[0],
+                photographers: photographers.map(p => ({ id: p.id }))
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+    
+            console.log(response.data); // Vérifier la réponse du backend
+            setMessage('Album created successfully');
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Erreur Axios:', error.response?.data || error);
+            setMessage(`Album creation failed: ${error.response?.data?.error || 'Unknown error'}`);
+        }
     };
 
     const handleAddPhotographer = () => {

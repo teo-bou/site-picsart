@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 
 use App\Models\Album;
 use App\Models\Image;
-
+use App\Models\AlbumUser;
 
 class AlbumController extends Controller
 {
     public function store(Request $request)
-    {   echo $request;
+    {
         // Validate the request
         $request->validate([
             'name' => 'required|string',
-            'event_at' => 'required|date'
+            'event_at' => 'required|date',
+            'photographers' => 'array',
+            'photographers.*.id' => 'integer|exists:users,id'
         ]);
 
         // Create an album
@@ -24,7 +26,15 @@ class AlbumController extends Controller
         $album->event_at = $request->event_at;
         $album->save();
 
-        return response()->json(['message' => 'Album created'], 201);
+        // Associate photographers with the album
+        foreach ($request->photographers as $photographer) {
+            AlbumUser::create([
+                'album_id' => $album->id,
+                'user_id' => $photographer['id']
+            ]);
+        }
+
+        return response()->json(['message' => 'Album created', 'album' => $album], 201);
     }
 
     public function show($id)
@@ -52,4 +62,5 @@ class AlbumController extends Controller
         $images = Image::where('album_id', $id)->get();
         return response()->json(['images' => $images], 200);
     }
+
 }

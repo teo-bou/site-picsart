@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/Components/Header';
 import ImageUpload from '@/Components/ImageUpload';
 import { usePage, Link } from '@inertiajs/react';
 import axios from 'axios';
 
 const AlbumPage = () => {
-    const { album, images } = usePage().props;
+    const { album, images, photographers } = usePage().props;
     const [image, setImage] = useState(null);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
@@ -68,7 +68,15 @@ const AlbumPage = () => {
                     <div>
                         <h1 className="text-4xl sm:text-5xl font-bold">{album.name}</h1>
                         <h4 className="text-lg sm:text-xl font-bold text-gray-600">{new Date(album.event_at).toLocaleDateString('fr-FR')}</h4>
-                        <p className="text-gray-500">@Jaimes Léfoto, @Jean Bon</p>
+                        {photographers && photographers.length > 0 && (
+                            <p className="text-gray-500">
+                                {photographers.map((photographer, index) => (
+                                    <span key={photographer.id}>
+                                        @ {photographer.firstname} {photographer.lastname}{index < photographers.length - 1 ? ', ' : ''}
+                                    </span>
+                                ))}
+                            </p>
+                        )}
                     </div>
 
                     <div className="flex items-center space-x-4">

@@ -45,12 +45,13 @@ Route::get('/albums', function () {
 Route::get('/albums/{id}', function ($id) {
     $album = App\Models\Album::find($id);
     $images = App\Models\Image::where('album_id', $id)->get();
+    
     return Inertia::render('AlbumPage', [
         'album' => $album,
-        'images' => $images
+        'images' => $images,
+        'photographers' => $album->photographers
     ]);
 })->name('albums.show');
-
 
 Route::delete('/albums/{id}', [App\Http\Controllers\AlbumController::class, 'destroy'])->name('albums.destroy');
 
