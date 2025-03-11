@@ -23,7 +23,20 @@ class ImageController extends Controller
                 $this->compressImage($file->getPathname(), $compressedPath);
                 $path = str_replace(storage_path('app/public/'), '', $compressedPath);
                 $paths[] = $path;
-                Image::create(['link' => $path, 'album_id' => $request->album_id ?? null]);
+
+                // Extract metadata
+                $exif = exif_read_data($file->getPathname());
+                $iso = $exif['ISOSpeedRatings'] ?? null;
+                $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
+                $vitesse_obturation = $exif['ExposureTime'] ?? null;
+
+                Image::create([
+                    'link' => $path,
+                    'album_id' => $request->album_id ?? null,
+                    'ISO' => $iso,
+                    'ouverture' => $ouverture,
+                    'vitesse_obturation' => $vitesse_obturation
+                ]);
             }
             return response()->json(['paths' => $paths], 201);
         }
