@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return redirect()->route('albums.index');
-});
+})->name('home');
 
 Route::post('/upload-images', [ImageController::class, 'store']);
 Route::post('/delete-images', [ImageController::class, 'deleteMultiple']);

@@ -13,7 +13,7 @@ const Header = () => {
 
         {/* Icône utilisateur à droite */}
         <div className="w-1/3 flex justify-center">
-          <button className="p-2 rounded-full ">
+          <a className="p-2 rounded-full " href="/login">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -28,7 +28,7 @@ const Header = () => {
                 d="M15.75 7.5a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 18.75a8.25 8.25 0 0115 0"
               />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </header>
