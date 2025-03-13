@@ -23,12 +23,20 @@ class ImageController extends Controller
                 $this->compressImage($file->getPathname(), $compressedPath);
                 $path = str_replace(storage_path('app/public/'), '', $compressedPath);
                 $paths[] = $path;
+                
 
                 // Extract metadata
-                $exif = exif_read_data($file->getPathname());
-                $iso = $exif['ISOSpeedRatings'] ?? null;
-                $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
-                $vitesse_obturation = $exif['ExposureTime'] ?? null;
+                $exif = @exif_read_data($compressedPath);
+                if ($exif === false) {
+                    error_log('Failed to read EXIF data from: ' . $compressedPath);
+                    $iso = null;
+                    $ouverture = null;
+                    $vitesse_obturation = null;
+                } else {
+                    $iso = $exif['ISOSpeedRatings'] ?? null;
+                    $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
+                    $vitesse_obturation = $exif['ExposureTime'] ?? null;
+                }
 
                 Image::create([
                     'link' => $path,
@@ -59,7 +67,6 @@ class ImageController extends Controller
             $quality = 85;
             $compressionLevel = 4;
         }
-        
         if ($info['mime'] == 'image/jpeg') {
             $image = imagecreatefromjpeg($source);
             imagejpeg($image, $destination, $quality);
@@ -72,7 +79,7 @@ class ImageController extends Controller
         } else {
             return;
         }
-        
+
         imagedestroy($image);
     }
     
