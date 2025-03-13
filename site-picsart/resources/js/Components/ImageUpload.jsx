@@ -13,7 +13,7 @@ const ImageUpload = ({ albumId }) => {
 
     const { getRootProps, getInputProps } = useDropzone({ 
         onDrop, 
-        accept: 'image/*', 
+        accept: 'image/jpeg, image/png, image/jpg, image/svg+xml, image/webp', 
         multiple: true 
     });
 
@@ -43,7 +43,7 @@ const ImageUpload = ({ albumId }) => {
             {/* Zone de Drop */}
             <div className='relative w-full pt-[63%] '>
                 <div {...getRootProps()} className="absolute top-0 left-0 w-full object-cover flex justify-center items-center h-full cursor-pointer border-2 border-dashed border-gray-300 p-6 rounded-lg text-center">
-                    <input {...getInputProps()} />
+                    <input {...getInputProps()} accept="image/jpeg, image/png, image/jpg, image/svg+xml, image/webp"/>
                     <div className="flex justify-center items-center flex-col">
                         <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path d="M5 12V18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V12" stroke="rgb(107 114 128 / var(--tw-text-opacity, 1))" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 15L12 3M12 3L8 7M12 3L16 7" stroke="rgb(107 114 128 / var(--tw-text-opacity, 1))" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                         <p className="text-gray-500">Ajoutez des photos</p>
