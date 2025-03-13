@@ -24,6 +24,7 @@ const ImagePage = () => {
                                 target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }
                             window.history.pushState({}, '', `/albums/${album_id}#image-${image.id}`);
+                            window.location.reload();
                         }}
                     >
                         <svg 

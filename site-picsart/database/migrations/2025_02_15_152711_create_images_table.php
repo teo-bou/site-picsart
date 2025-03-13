@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('vitesse_obturation')->nullable();
             $table->foreignId('photographer_id')
             ->nullable()
+            ->constrained('users');
             ->nullOnDelete(); 
         });
     }

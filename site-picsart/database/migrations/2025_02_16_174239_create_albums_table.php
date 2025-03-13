@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamp('event_at')->nullable();
+            $table->string('semestre', 3)->after('link_cover')->nullable();
             
         });
     }

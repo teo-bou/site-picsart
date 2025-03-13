@@ -19,25 +19,27 @@ class ImageController extends Controller
     
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $compressedPath = storage_path('app/public/images/' . uniqid() . '.' . $file->getClientOriginalExtension());
-                $this->compressImage($file->getPathname(), $compressedPath);
-                $path = str_replace(storage_path('app/public/'), '', $compressedPath);
-                $paths[] = $path;
-                
-
                 // Extract metadata
-                $exif = @exif_read_data($compressedPath);
+                $exif = exif_read_data($file);
                 if ($exif === false) {
                     error_log('Failed to read EXIF data from: ' . $compressedPath);
                     $iso = null;
                     $ouverture = null;
                     $vitesse_obturation = null;
                 } else {
-                    $iso = $exif['ISOSpeedRatings'] ?? null;
+                    error_log(json_encode($exif));
+                     $iso = $exif['ISOSpeedRatings'] ?? null;
                     $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
                     $vitesse_obturation = $exif['ExposureTime'] ?? null;
+                    
                 }
 
+                $compressedPath = storage_path('app/public/images/' . uniqid() . '.' . $file->getClientOriginalExtension());
+                $this->compressImage($file->getPathname(), $compressedPath);
+                $path = str_replace(storage_path('app/public/'), '', $compressedPath);
+                $paths[] = $path;
+                
+                
                 Image::create([
                     'link' => $path,
                     'album_id' => $request->album_id ?? null,
