@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('link');
             $table->foreignId('album_id');
             $table->integer('ISO')->nullable();
-            $table->integer('ouverture')->nullable();
-            $table->integer('vitesse_obturation')->nullable();
+            $table->string('ouverture')->nullable();
+            $table->string('vitesse_obturation')->nullable();
+            $table->foreignId('photographer_id')
+            ->nullable()
+            ->nullOnDelete(); 
         });
     }
 
