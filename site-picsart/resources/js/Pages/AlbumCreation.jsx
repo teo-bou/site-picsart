@@ -31,7 +31,7 @@ const AlbumCreation = () => {
         try {
             const response = await axios.post('/upload-album', {
                 name: name,
-                event_at: selectedDate.toISOString().split('T')[0],
+                event_at: new Date(selectedDate.getTime() + 86400000).toISOString().split('T')[0],
                 photographers: photographers.map(p => ({ id: p.id }))
             }, {
                 headers: {
