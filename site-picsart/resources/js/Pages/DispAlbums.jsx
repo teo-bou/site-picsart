@@ -29,7 +29,7 @@ const DispAlbums = () => {
             <div className="max-w-7xl mx-auto p-6">
                 <h1 className="text-3xl font-bold text-gray-800">Album Gallery</h1>
                 <Link 
-                    href="/albums/create" 
+                    href="/albums-create" 
                     className="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500"
                 >
                     Create Album

@@ -59,9 +59,11 @@ Route::get('/images', function () {
 
 Route::get('/images/{id}', [ImageController::class, 'show'])->name('images.show');
 
-Route::get('/albums/create', function () {
+Route::get('/albums-create', function () {
     return Inertia::render('AlbumCreation');
 })->name('albums.create');
+
+
 Route::get('/albums', function () {
     
     return Inertia::render('DispAlbums', [
