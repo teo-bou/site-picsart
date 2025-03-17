@@ -92,6 +92,7 @@ Route::get('/login-user/{id}', function(
         if ($user) {
             Auth::login($user);
         }
+        return redirect()->route('home');
 })->name('login.user');
 
 

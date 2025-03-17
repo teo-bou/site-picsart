@@ -34,7 +34,7 @@ const DispAlbums = () => {
                 >
                     Create Album
                 </Link>
-                <div >{user.id}</div>
+                <h1 className="text-2xl font-semibold text-gray-700 mt-6">Welcome {user.firstname} {user.lastname}</h1>
                 <h1 className="text-2xl font-semibold text-gray-700 mt-6">Your Albums</h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                     {albums_user.map((album) => (
