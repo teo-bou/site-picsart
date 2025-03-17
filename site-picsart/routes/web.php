@@ -15,9 +15,7 @@ use App\Models\AlbumUser;
 use App\Models\User;
 use App\Models\Photographer;
 
-Route::get('/', function () {
-    return redirect()->route('albums.index');
-})->name('home');
+
 
 Route::post('/upload-images', [ImageController::class, 'store']);
 Route::post('/delete-images', [ImageController::class, 'deleteMultiple']);
@@ -28,6 +26,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/welcome', function () {
         return Inertia::render('Welcome');
     })->name('welcome');
+    Route::get('/', function () {
+        return redirect()->route('albums.index');
+    })->name('home');
+});
+
+
+Route::middleware('check.album.user')->group(function () {
+    Route::get('/albums/{id}', function ($id) {
+        $album = Album::find($id);
+        $images = Image::where('album_id', $id)->get();
+        
+        return Inertia::render('AlbumPage', [
+            'album' => $album,
+            'images' => $images,
+            'photographers' => $album->photographers
+        ]);
+    })->name('albums.show');
+    
+    Route::delete('/albums/{id}', [AlbumController::class, 'destroy'])->name('albums.destroy');
+    
 });
 
 Route::post('/upload-images', [ImageController::class, 'store'])->name('image.upload');
@@ -53,18 +71,6 @@ Route::get('/albums', function () {
     ]);
 })->name('albums.index');
 
-Route::get('/albums/{id}', function ($id) {
-    $album = Album::find($id);
-    $images = Image::where('album_id', $id)->get();
-    
-    return Inertia::render('AlbumPage', [
-        'album' => $album,
-        'images' => $images,
-        'photographers' => $album->photographers
-    ]);
-})->name('albums.show');
-
-Route::delete('/albums/{id}', [AlbumController::class, 'destroy'])->name('albums.destroy');
 
 Route::post('/delete-images', [ImageController::class, 'deleteMultiple'])->name('images.destroyMultiple');
 Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
