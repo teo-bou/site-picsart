@@ -11,18 +11,25 @@ class ImageController extends Controller
 {
     public function store(Request $request)
     {
+
         $request->validate([
             'images.*' => 'required|image|mimes:jpeg,png,jpg,svg,webp'
         ]);
-    
+        
         $paths = [];
     
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 // Extract metadata
-                $exif = exif_read_data($file);
+                try {
+                    $exif = exif_read_data($file);
+                } catch (\Exception $e) {
+                    error_log('Failed to read EXIF data: ' . $e->getMessage());
+                    $exif = false;
+                }
+
                 if ($exif === false) {
-                    error_log('Failed to read EXIF data from: ' . $compressedPath);
+                    error_log('No EXIF data found');
                     $iso = null;
                     $ouverture = null;
                     $vitesse_obturation = null;
@@ -33,7 +40,7 @@ class ImageController extends Controller
                     $vitesse_obturation = $exif['ExposureTime'] ?? null;
                     
                 }
-
+                error_log('ISO: ');
                 $compressedPath = storage_path('app/public/images/' . uniqid() . '.' . $file->getClientOriginalExtension());
                 $this->compressImage($file->getPathname(), $compressedPath);
                 $path = str_replace(storage_path('app/public/'), '', $compressedPath);
