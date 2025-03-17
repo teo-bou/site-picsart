@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
 use App\Models\Album;
+use App\Models\AlbumUser;
 use App\Models\User;
 use App\Models\Photographer;
 
@@ -44,8 +45,11 @@ Route::get('/albums/create', function () {
     return Inertia::render('AlbumCreation');
 })->name('albums.create');
 Route::get('/albums', function () {
+    
     return Inertia::render('DispAlbums', [
-        'albums' => Album::all()   
+        'albums_user' => Album::whereIn('id', AlbumUser::where('user_id', Auth::id())->pluck('album_id'))->get(),
+        'albums' => Album::all(),
+        'user' => Auth::user()   
     ]);
 })->name('albums.index');
 
@@ -70,5 +74,20 @@ Route::get('/display', function () {
         'details' => Auth::user()
     ]);
 })->name('display');
+
+Route::get('/albums/photographer/{id}', [AlbumController::class, 'getAlbumsByPhotographer'])->name('albums.photographer');
+
+
+Route::get('/login-user/{id}', function(
+    $id
+) {
+    $user = User::find($id);
+
+        if ($user) {
+            Auth::login($user);
+        }
+})->name('login.user');
+
+
 
 require __DIR__.'/auth.php';
