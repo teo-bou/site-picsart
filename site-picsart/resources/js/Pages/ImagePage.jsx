@@ -53,7 +53,9 @@ const ImagePage = () => {
                     <div>
                         <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl">Jaimes Lefoto</h1>
                         <h4 className='font-bold text-lg sm:text-xl md:text-2xl'>{new Date(image.created_at).toLocaleDateString('fr-FR')}</h4>
-                        <p className="text-sm sm:text-base md:text-lg">ISO-{image.ISO}, {image.ouverture}, {image.vitesse_obturation}</p>
+                        <p className="text-sm sm:text-base md:text-lg">
+                            {`${image.ISO ? `ISO-${image.ISO}` : ''}${image.ISO && image.ouverture ? ', ' : ''}${image.ouverture ? image.ouverture : ''}${(image.ISO || image.ouverture) && image.vitesse_obturation ? ', ' : ''}${image.vitesse_obturation ? image.vitesse_obturation : ''}`}
+                        </p>
                     </div>
 
                     {/* Bouton de téléchargement */}

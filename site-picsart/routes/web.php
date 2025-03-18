@@ -62,6 +62,8 @@ Route::get('/albums/{id}', function ($id) {
 
 Route::delete('/albums/{id}', [AlbumController::class, 'destroy'])->name('albums.destroy');
 
+Route::post('/albums/{id}/set-cover', [AlbumController::class, 'setCover'])->name('albums.setCover');
+
 Route::post('/delete-images', [ImageController::class, 'deleteMultiple'])->name('images.destroyMultiple');
 Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
 

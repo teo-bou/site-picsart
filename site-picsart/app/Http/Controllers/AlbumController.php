@@ -63,4 +63,13 @@ class AlbumController extends Controller
         return response()->json(['images' => $images], 200);
     }
 
+    public function setCover(Request $request, $id)
+    {
+        $album = Album::find($id);
+        $album->link_cover = $request->link_cover;
+        $album->save();
+
+        return response()->json(['message' => 'Image de couverture mise à jour'], 200);
+    }
+
 }

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('link_cover')->nullable();
             $table->string('semestre', 3)->nullable();
             $table->boolean('published')->default(false);
+            $table->boolean('archived')->default(false);
+            $table->string('link_archive')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamp('event_at')->nullable();
         });

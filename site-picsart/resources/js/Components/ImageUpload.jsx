@@ -25,10 +25,16 @@ const ImageUpload = ({ albumId }) => {
         formData.append('album_id', albumId);
 
         try {
-            await axios.post('/upload-images', formData, {
+            const response = await axios.post('/upload-images', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            alert('Image(s) importée(s)');
+
+            if (response.data.excluded_files && response.data.excluded_files.length > 0) {
+                alert(`Certaines images n'ont pas été importées car elles dépassent 10MB`);
+            } else {
+                alert('Image(s) importée(s)');
+            }
+
             setIsModalOpen(false);
             setSelectedFiles([]);
             window.location.reload();
@@ -54,9 +60,9 @@ const ImageUpload = ({ albumId }) => {
             {/* Modal de prévisualisation */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[80%] overflow-hidden">
+                    <div className="flex flex-col justify-between bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[80%] overflow-hidden">
                         <h2 className="text-lg font-bold mb-4">Prévisualisation des images</h2>
-                        <div className="overflow-y-auto max-h-[60vh] mb-4 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400">
+                        <div className="overflow-y-auto max-h-[60%] mb-4 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400">
                             <div className="grid grid-cols-3 gap-2">
                                 {selectedFiles.map((file, index) => (
                                     <img key={index} src={URL.createObjectURL(file)} alt={`preview-${index}`} className="w-full h-20 object-cover rounded-md" />

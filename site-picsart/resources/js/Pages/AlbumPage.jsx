@@ -57,6 +57,36 @@ const AlbumPage = () => {
         window.location.href = `/download-images?ids=${imageIds}`;
     };
 
+    const handleArchiveSelected = () => {
+        axios.post('/archive-images', { imageIds: selectedImages })
+            .then(response => {
+                alert('Images archivées et supprimées');
+                window.location.reload();
+            })
+            .catch(error => {
+                alert('Problème lors de l\'archivage des images');
+                console.error(error);
+            });
+    };
+
+    const handleSetCoverImage = () => {
+        if (selectedImages.length === 1) {
+            const selectedImageId = selectedImages[0];
+            const selectedImage = images.find(image => image.id === selectedImageId);
+            axios.post(`/albums/${album.id}/set-cover`, { link_cover: selectedImage.link })
+                .then(response => {
+                    alert('Image de couverture mise à jour');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert('Problème lors de la mise à jour de l\'image de couverture');
+                    console.error(error);
+                });
+        } else {
+            alert('Veuillez sélectionner une seule image pour définir comme couverture');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-white flex flex-col">
             <Header />
@@ -99,6 +129,13 @@ const AlbumPage = () => {
                         {isSelectionMode && (
                             <button onClick={handleDeleteSelected} className="p-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            </button>
+                        )}
+
+                        {/* Bouton pour définir l'image de couverture */}
+                        {isSelectionMode && (
+                            <button onClick={handleSetCoverImage} className="p-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-120q-33 0-56.5-23.5T120-200v-240h80v240h240v80H200Zm320 0v-80h240v-240h80v240q0 33-23.5 56.5T760-120H520ZM240-280l120-160 90 120 120-160 150 200H240ZM120-520v-240q0-33 23.5-56.5T200-840h240v80H200v240h-80Zm640 0v-240H520v-80h240q33 0 56.5 23.5T840-760v240h-80Zm-140-40q-26 0-43-17t-17-43q0-26 17-43t43-17q26 0 43 17t17 43q0 26-17 43t-43 17Z"/></svg>
                             </button>
                         )}
 

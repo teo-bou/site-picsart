@@ -14,41 +14,61 @@ class ImageController extends Controller
         $request->validate([
             'images.*' => 'required|image|mimes:jpeg,png,jpg,svg,webp'
         ]);
-    
+
         $paths = [];
-    
+        $excludedFiles = [];
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                // Extract metadata
-                $exif = exif_read_data($file);
-                if ($exif === false) {
-                    error_log('Failed to read EXIF data from: ' . $compressedPath);
+                // Check if the file size is less than 10MB
+                if ($file->getSize() > 10 * 1024 * 1024) {
+                    $excludedFiles[] = $file->getClientOriginalName();
+                    continue;
+                }
+
+                // Check if the file type is supported for EXIF data extraction
+                $supportedTypes = ['jpeg', 'jpg', 'tiff'];
+                $fileExtension = strtolower($file->getClientOriginalExtension());
+
+                if (in_array($fileExtension, $supportedTypes)) {
+                    // Extract metadata
+                    $exif = exif_read_data($file);
+                    if ($exif === false) {
+                        error_log('Failed to read EXIF data from: ' . $file->getClientOriginalName());
+                        $iso = null;
+                        $ouverture = null;
+                        $vitesse_obturation = null;
+                    } else {
+                        error_log(json_encode($exif));
+                        $iso = $exif['ISOSpeedRatings'] ?? null;
+                        $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
+                        $vitesse_obturation = $exif['ExposureTime'] ?? null;
+                    }
+                } else {
                     $iso = null;
                     $ouverture = null;
                     $vitesse_obturation = null;
-                } else {
-                    error_log(json_encode($exif));
-                     $iso = $exif['ISOSpeedRatings'] ?? null;
-                    $ouverture = $exif['COMPUTED']['ApertureFNumber'] ?? null;
-                    $vitesse_obturation = $exif['ExposureTime'] ?? null;
-                    
                 }
 
-                $compressedPath = storage_path('app/public/images/' . uniqid() . '.' . $file->getClientOriginalExtension());
-                $this->compressImage($file->getPathname(), $compressedPath);
-                $path = str_replace(storage_path('app/public/'), '', $compressedPath);
-                $paths[] = $path;
-                
-                
+                $fileName = uniqid() . '.' . $fileExtension;
+                $path = $file->storeAs('/images', $fileName, 'public');
+                $paths[] = str_replace('public/', '', $path);
+
                 Image::create([
-                    'link' => $path,
+                    'link' => str_replace('public/', '', $path),
                     'album_id' => $request->album_id ?? null,
                     'ISO' => $iso,
                     'ouverture' => $ouverture,
                     'vitesse_obturation' => $vitesse_obturation
                 ]);
             }
-            return response()->json(['paths' => $paths], 201);
+
+            $response = ['paths' => $paths];
+            if (!empty($excludedFiles)) {
+                $response['excluded_files'] = $excludedFiles;
+            }
+
+            return response()->json($response, 201);
         }
         return response()->json(['error' => 'Images not uploaded'], 400);
     }
