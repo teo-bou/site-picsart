@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 use App\Models\Album;
 use App\Models\Image;
@@ -70,6 +72,66 @@ class AlbumController extends Controller
         $album->save();
 
         return response()->json(['message' => 'Image de couverture mise à jour'], 200);
+    }
+
+    public function download($id)
+    {
+        $album = Album::find($id);
+        $archivePath = storage_path('app/public/' . $album->link_archive);
+
+        if (file_exists($archivePath)) {
+            return response()->download($archivePath)->deleteFileAfterSend(false);
+        } else {
+            return response()->json(['message' => 'Archive not found'], 404);
+        }
+    }
+
+    public function archive($id)
+    {
+        $album = Album::find($id);
+        $images = Image::where('album_id', $id)->get();
+        $coverImageLink = $album->link_cover;
+
+        $zip = new ZipArchive;
+        $zipFileName = 'archive_' . $album->name . '_' . $album->semestre .'.zip';
+        $zipFilePath = storage_path('app/public/archives/' . $zipFileName);
+
+        // Ensure the directory exists
+        if (!file_exists(storage_path('app/public/archives'))) {
+            mkdir(storage_path('app/public/archives'), 0777, true);
+        }
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ($images as $image) {
+                $filePath = storage_path('app/public/' . $image->link);
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                } else if (!file_exists($filePath)) {
+                    return response()->json(['message' => 'File does not exist: ' . $filePath], 500);
+                }
+            }
+            $zip->close();
+
+            // Update album
+            $album->archived = true;
+            $album->link_archive = 'storage/archives/' . $zipFileName;
+            $album->save();
+
+            // Delete images from storage except the cover image
+            foreach ($images as $image) {
+                if ($image->link !== $coverImageLink) {
+                    $imagePath = storage_path('app/public/' . $image->link);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath); // Suppression avec unlink
+                    }
+                }
+                $image->delete();
+            }
+
+            return response()->json(['message' => 'Album archived', 'album' => $album], 200);
+        } else {
+            return response()->json(['message' => 'Failed to create archive at: ' . $zipFilePath], 500);
+        }
     }
 
 }

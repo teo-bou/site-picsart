@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('check.album.user')->group(function () {
     Route::get('/albums/{id}', function ($id) {
         $album = Album::find($id);
+        if ($album->archived) {
+            return redirect()->route('archive.show', ['id' => $id]);
+        }
         $images = Image::where('album_id', $id)->get();
         
         return Inertia::render('AlbumPage', [
@@ -48,6 +51,16 @@ Route::middleware('check.album.user')->group(function () {
     Route::delete('/albums/{id}', [AlbumController::class, 'destroy'])->name('albums.destroy');
     
 });
+
+Route::get('/archive/{id}', function ($id) {
+    $album = Album::find($id);
+    $photographers = $album->photographers;
+
+    return Inertia::render('ArchivePage', [
+        'album' => $album,
+        'photographers' => $photographers
+    ]);
+})->name('archive.show');
 
 Route::post('/upload-images', [ImageController::class, 'store'])->name('image.upload');
 Route::post('/upload-album', [AlbumController::class, 'store'])->name('album.upload');
@@ -77,8 +90,12 @@ Route::get('/albums', function () {
 
 Route::post('/albums/{id}/set-cover', [AlbumController::class, 'setCover'])->name('albums.setCover');
 
+Route::post('/albums/{id}/archive', [AlbumController::class, 'archive'])->name('albums.archive');
+
 Route::post('/delete-images', [ImageController::class, 'deleteMultiple'])->name('images.destroyMultiple');
 Route::get('/download-images', [ImageController::class, 'download'])->name('images.download');
+
+Route::get('/download-archive/{id}', [AlbumController::class, 'download'])->name('archive.download');
 
 Route::get('/display', function () {
     return response()->json([

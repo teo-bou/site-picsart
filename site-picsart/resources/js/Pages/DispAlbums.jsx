@@ -41,7 +41,7 @@ const DispAlbums = () => {
                         <div key={album.id} className="relative bg-white shadow-lg rounded-lg overflow-hidden">
                             <Link href={`/albums/${album.id}`}>
                                 <img 
-                                    src={`/storage/${album.link_cover}`  || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'} 
+                                    src={album.link_cover ? `/storage/${album.link_cover}` : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'} 
                                     alt="Album Cover" 
                                     className="w-full h-48 object-cover"
                                 />
@@ -67,7 +67,7 @@ const DispAlbums = () => {
                         <div key={album.id} className="relative bg-white shadow-lg rounded-lg overflow-hidden">
                             <Link href={`/albums/${album.id}`}>
                                 <img 
-                                    src={album.cover || 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'} 
+                                    src={album.link_cover ? `/storage/${album.link_cover}` : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'} 
                                     alt="Album Cover" 
                                     className="w-full h-48 object-cover"
                                 />

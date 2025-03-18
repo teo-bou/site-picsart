@@ -9,6 +9,13 @@ const AlbumPage = () => {
     const [image, setImage] = useState(null);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
+    const [showArchiveConfirm, setShowArchiveConfirm] = useState(false);
+
+    useEffect(() => {
+        if (album.archived) {
+            window.location.href = `/archive/${album.id}`;
+        }
+    }, [album]);
 
     const toggleSelectionMode = () => {
         setIsSelectionMode(!isSelectionMode);
@@ -87,6 +94,26 @@ const AlbumPage = () => {
         }
     };
 
+    const handleArchiveAlbum = () => {
+        setShowArchiveConfirm(true);
+    };
+
+    const confirmArchiveAlbum = () => {
+        axios.post(`/albums/${album.id}/archive`)
+            .then(response => {
+                alert('Album archivé');
+                window.location.reload();
+            })
+            .catch(error => {
+                alert('Problème lors de l\'archivage de l\'album');
+                console.error(error);
+            });
+    };
+
+    const cancelArchiveAlbum = () => {
+        setShowArchiveConfirm(false);
+    };
+
     return (
         <div className="min-h-screen bg-white flex flex-col">
             <Header />
@@ -139,6 +166,11 @@ const AlbumPage = () => {
                             </button>
                         )}
 
+                        {/* Bouton pour archiver l'album */}
+                        <button onClick={handleArchiveAlbum} className="p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-80q-33 0-56.5-23.5T120-160v-451q-18-11-29-28.5T80-680v-120q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v120q0 23-11 40.5T840-611v451q0 33-23.5 56.5T760-80H200Zm0-520v440h560v-440H200Zm-40-80h640v-120H160v120Zm200 280h240v-80H360v80Zm120 20Z"/></svg>
+                        </button>
+
                         {/* Bouton de sélection */}
                         <button 
                             onClick={toggleSelectionMode} 
@@ -184,6 +216,18 @@ const AlbumPage = () => {
                 </div>
 
             </div>
+            {showArchiveConfirm && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">Confirmer l'archivage</h2>
+                        <p className="mb-4">Êtes-vous sûr de vouloir archiver cet album ?</p>
+                        <div className="flex justify-end space-x-4">
+                            <button onClick={cancelArchiveAlbum} className="px-4 py-2 bg-gray-300 rounded">Annuler</button>
+                            <button onClick={confirmArchiveAlbum} className="px-4 py-2 bg-red-600 text-white rounded">Confirmer</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -5,9 +5,15 @@ import axios from 'axios';
 const ImageUpload = ({ albumId, userId }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const onDrop = useCallback((acceptedFiles) => {
-        setSelectedFiles(acceptedFiles);
+        const filteredFiles = acceptedFiles.filter(file => file.size <= 10 * 1024 * 1024);
+        if (filteredFiles.length < acceptedFiles.length) {
+            alert('Certaines images dépassent 10MB et ne seront pas importées.');
+        }
+        setSelectedFiles(filteredFiles);
         setIsModalOpen(true);
     }, []);
 
@@ -18,16 +24,21 @@ const ImageUpload = ({ albumId, userId }) => {
     });
 
     const handleUpload = async () => {
+        setIsLoading(true);
         const formData = new FormData();
         selectedFiles.forEach((file) => {
             formData.append('images[]', file);
         });
         formData.append('album_id', albumId);
-        formData.append('user_id', userId); // Add userId to the request
+        formData.append('user_id', userId);
 
         try {
             const response = await axios.post('/upload-images', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(percentCompleted);
+                }
             });
 
             if (response.data.excluded_files && response.data.excluded_files.length > 0) {
@@ -42,6 +53,9 @@ const ImageUpload = ({ albumId, userId }) => {
         } catch (error) {
             alert("Problème lors de l'importation des images");
             console.error(error);
+        } finally {
+            setIsLoading(false);
+            setUploadProgress(0);
         }
     };
 
@@ -72,8 +86,17 @@ const ImageUpload = ({ albumId, userId }) => {
                         </div>
                         <div className="flex justify-between">
                             <button className="px-4 py-2 bg-red-500 text-white rounded-md" onClick={() => setIsModalOpen(false)}>Annuler</button>
-                            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md" onClick={handleUpload}>Upload</button>
+                            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md" onClick={handleUpload} disabled={isLoading}>
+                                {isLoading ? 'Uploading...' : 'Upload'}
+                            </button>
                         </div>
+                        {isLoading && (
+                            <div className="mt-4">
+                                <div className="w-full bg-gray-200 rounded-full">
+                                    <div className="bg-indigo-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${uploadProgress}%` }}>{uploadProgress}%</div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
