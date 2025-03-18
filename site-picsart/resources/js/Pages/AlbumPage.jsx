@@ -5,7 +5,7 @@ import { usePage, Link } from '@inertiajs/react';
 import axios from 'axios';
 
 const AlbumPage = () => {
-    const { album, images, photographers } = usePage().props;
+    const { album, images, photographers, userId } = usePage().props;
     const [image, setImage] = useState(null);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
@@ -143,7 +143,7 @@ const AlbumPage = () => {
                             </div>
                         </div>
                     ))}
-                    <ImageUpload albumId={album.id} />
+                    <ImageUpload albumId={album.id} userId={userId} />
                 </div>
 
             </div>

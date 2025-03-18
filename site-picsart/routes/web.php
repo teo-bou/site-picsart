@@ -40,7 +40,8 @@ Route::middleware('check.album.user')->group(function () {
         return Inertia::render('AlbumPage', [
             'album' => $album,
             'images' => $images,
-            'photographers' => $album->photographers
+            'photographers' => $album->photographers,
+            'userId' => Auth::id()
         ]);
     })->name('albums.show');
     

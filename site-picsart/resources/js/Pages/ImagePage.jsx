@@ -3,7 +3,7 @@ import Header from '@/Components/Header';
 import { Link, usePage } from '@inertiajs/react';
 
 const ImagePage = () => {
-    const { album_id, image } = usePage().props;
+    const { album_id, image, photographer } = usePage().props;
 
     return (
         <div className="min-h-screen bg-white flex flex-col">
@@ -51,9 +51,21 @@ const ImagePage = () => {
                 <div className="w-full flex justify-between pt-4">
                     {/* Texte de l’image */}
                     <div>
-                        <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl">Jaimes Lefoto</h1>
-                        <h4 className='font-bold text-lg sm:text-xl md:text-2xl'>{new Date(image.created_at).toLocaleDateString('fr-FR')}</h4>
-                        <p className="text-sm sm:text-base md:text-lg">ISO-{image.ISO}, {image.ouverture}, {image.vitesse_obturation}</p>
+                        {photographer && (
+                            <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl">@ {photographer}</h1>
+                        )}
+                        {image.created_at && (
+                            <h4 className="font-bold text-lg sm:text-xl md:text-2xl">
+                                {new Date(image.created_at).toLocaleDateString('fr-FR')}
+                            </h4>
+                        )}
+                        {(image.ISO || image.ouverture || image.vitesse_obturation) && (
+                            <p className="text-sm sm:text-base md:text-lg">
+                                {image.ISO && `ISO-${image.ISO}`}
+                                {image.ouverture && `, ${image.ouverture}`}
+                                {image.vitesse_obturation && `, ${image.vitesse_obturation}`}
+                            </p>
+                        )}
                     </div>
 
                     {/* Bouton de téléchargement */}
