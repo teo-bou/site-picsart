@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->group('auth', [
             \App\Http\Middleware\Authenticate::class,
         ]);
+        $middleware->group('check.album.user', [
+            \App\Http\Middleware\CheckAlbumUser::class,
+        ]);
 
     
     })

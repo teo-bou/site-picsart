@@ -11,5 +11,5 @@ class Image extends Model
         return $this->belongsTo(User::class, 'photographer_id');
     }
 
-    protected $fillable = ['link', 'album_id', 'ISO', 'ouverture', 'vitesse_obturation'];
+    protected $fillable = ['link', 'album_id', 'ISO', 'ouverture', 'vitesse_obturation', 'photographer_id'];
 }

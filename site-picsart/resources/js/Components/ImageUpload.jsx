@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 
-const ImageUpload = ({ albumId }) => {
+const ImageUpload = ({ albumId, userId }) => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,6 +23,7 @@ const ImageUpload = ({ albumId }) => {
             formData.append('images[]', file);
         });
         formData.append('album_id', albumId);
+        formData.append('user_id', userId); // Add userId to the request
 
         try {
             const response = await axios.post('/upload-images', formData, {

@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Image;
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class ImageController extends Controller
 {
     public function store(Request $request)
     {
+
         $request->validate([
             'images.*' => 'required|image|mimes:jpeg,png,jpg,svg,webp'
         ]);
@@ -59,7 +61,8 @@ class ImageController extends Controller
                     'album_id' => $request->album_id ?? null,
                     'ISO' => $iso,
                     'ouverture' => $ouverture,
-                    'vitesse_obturation' => $vitesse_obturation
+                    'vitesse_obturation' => $vitesse_obturation,
+                    'photographer_id' => $request->user_id,
                 ]);
             }
 
@@ -109,10 +112,16 @@ class ImageController extends Controller
     {
         $image = Image::findOrFail($id);
         $album_id = $image->album_id;
+        $photographer_id = $image->photographer_id;
+        $photographer = $image->photographer_id ? User::find($photographer_id) : null;
+        $photographerName = $photographer ? $photographer->firstname . ' ' . $photographer->lastname : null;
 
         return inertia('ImagePage', [
             'image' => $image,
             'album_id' => $album_id,
+            'photographer' => $photographerName
+            
+
         ]);
     }
 
